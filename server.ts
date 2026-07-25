@@ -12,12 +12,11 @@ const __dirname = path.dirname(__filename);
 
 const PORT = 3000;
 
-async function startServer() {
-  const app = express();
+export const app = express();
 
-  app.use(express.json({ limit: "5mb" }));
+app.use(express.json({ limit: "5mb" }));
 
-  // Initialize Gemini AI Client
+// Initialize Gemini AI Client
   const getAiClient = () => {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
@@ -178,7 +177,7 @@ ${gradeContext ? `الصف الدراسي الحالي للطالب: ${gradeCont
     }
   });
 
-  // Vite Integration
+async function startServer() {
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
       server: { middlewareMode: true },
@@ -193,9 +192,15 @@ ${gradeContext ? `الصف الدراسي الحالي للطالب: ${gradeCont
     });
   }
 
-  app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on http://0.0.0.0:${PORT}`);
-  });
+  if (!process.env.VERCEL) {
+    app.listen(PORT, "0.0.0.0", () => {
+      console.log(`Server running on http://0.0.0.0:${PORT}`);
+    });
+  }
 }
 
-startServer();
+if (!process.env.VERCEL) {
+  startServer();
+}
+
+export default app;
