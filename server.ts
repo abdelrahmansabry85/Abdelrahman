@@ -16,6 +16,17 @@ export const app = express();
 
 app.use(express.json({ limit: "5mb" }));
 
+// Enable CORS for API requests
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
 // Initialize Gemini AI Client
   const getAiClient = () => {
     const apiKey = process.env.GEMINI_API_KEY;
@@ -33,12 +44,12 @@ app.use(express.json({ limit: "5mb" }));
   };
 
   // Health check
-  app.get("/api/health", (_req, res) => {
+  app.get(["/api/health", "/health"], (_req, res) => {
     res.json({ status: "ok", timestamp: new Date().toISOString() });
   });
 
   // AI Chat Assistant endpoint for English Learning & Practice
-  app.post("/api/ai/chat", async (req, res) => {
+  app.post(["/api/ai/chat", "/ai/chat"], async (req, res) => {
     try {
       const { message, history, gradeContext } = req.body;
 
@@ -111,7 +122,7 @@ ${gradeContext ? `الصف الدراسي الحالي للطالب: ${gradeCont
   });
 
   // Quiz Generator endpoint
-  app.post("/api/ai/quiz", async (req, res) => {
+  app.post(["/api/ai/quiz", "/ai/quiz"], async (req, res) => {
     try {
       const { grade, topic } = req.body;
       const apiKey = process.env.GEMINI_API_KEY;
