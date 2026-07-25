@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import { Bot, Send, Sparkles, HelpCircle, CheckCircle, RefreshCw, BookOpen, AlertCircle } from 'lucide-react';
 import { ChatMessage, QuizQuestion } from '../types';
+import {
+  getFallbackChatResponse,
+  getFallbackTranslationResponse,
+  getFallbackQuizQuestions,
+} from '../utils/fallbackAi';
 
 export const AiGrammarAssistant: React.FC = () => {
   const [activeSubTab, setActiveSubTab] = useState<'chat' | 'translate' | 'quiz'>('chat');
@@ -57,7 +62,11 @@ export const AiGrammarAssistant: React.FC = () => {
       });
 
       const data = await res.json();
-      const assistantText = data.answer || 'حدث خطأ في استلام الإجابة. يرجى المحاولة مرة أخرى.';
+      let assistantText = data.answer;
+
+      if (!res.ok || !assistantText || data.error) {
+        assistantText = getFallbackChatResponse(userText);
+      }
 
       setMessages((prev) => [
         ...prev,
@@ -70,12 +79,13 @@ export const AiGrammarAssistant: React.FC = () => {
       ]);
     } catch (err) {
       console.error(err);
+      const assistantText = getFallbackChatResponse(userText);
       setMessages((prev) => [
         ...prev,
         {
           id: (Date.now() + 1).toString(),
           sender: 'assistant',
-          text: 'تعذر الاتصال بالمساعد الذكي حالياً. يمكنك طرح السؤال على مستر مصطفى مباشرة عبر الواتساب: 01003837404',
+          text: assistantText,
           timestamp: new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }),
         },
       ]);
@@ -102,10 +112,14 @@ export const AiGrammarAssistant: React.FC = () => {
       });
 
       const data = await res.json();
-      setTranslateOutput(data.answer || 'تم التحقق من الجملة.');
+      if (res.ok && data.answer && !data.error) {
+        setTranslateOutput(data.answer);
+      } else {
+        setTranslateOutput(getFallbackTranslationResponse(translateInput));
+      }
     } catch (err) {
       console.error(err);
-      setTranslateOutput('حدث خطأ أثناء الاتصال. حاول مرة أخرى.');
+      setTranslateOutput(getFallbackTranslationResponse(translateInput));
     } finally {
       setLoadingTranslate(false);
     }
@@ -125,11 +139,14 @@ export const AiGrammarAssistant: React.FC = () => {
       });
 
       const data = await res.json();
-      if (data.questions && Array.isArray(data.questions)) {
+      if (res.ok && data.questions && Array.isArray(data.questions) && data.questions.length > 0) {
         setQuizQuestions(data.questions);
+      } else {
+        setQuizQuestions(getFallbackQuizQuestions(selectedGradeForQuiz));
       }
     } catch (err) {
       console.error(err);
+      setQuizQuestions(getFallbackQuizQuestions(selectedGradeForQuiz));
     } finally {
       setLoadingQuiz(false);
     }
