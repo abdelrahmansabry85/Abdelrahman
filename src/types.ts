@@ -6,7 +6,7 @@ export interface ScheduleItem {
   stage: 'preparatory' | 'secondary' | 'azhar';
   days: string[];
   timeText: string;
-  startDateText: string;
+  startDateText?: string;
   iconType: 'clock' | 'book' | 'chat' | 'pencil';
   status: 'open' | 'starting_soon' | 'limited';
   description?: string;

@@ -123,13 +123,15 @@ export const ScheduleSection: React.FC = () => {
                       <span className="font-black text-[#F3E5AB] text-sm">{schedule.timeText}</span>
                     </div>
 
-                    <div className="p-3 rounded-2xl bg-[#0A1628] border border-[#D4AF37]/20 flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-slate-300">
-                        <Sparkles className="w-4 h-4 text-amber-400" />
-                        <span className="font-bold">تاريخ البداية:</span>
+                    {schedule.startDateText && (
+                      <div className="p-3 rounded-2xl bg-[#0A1628] border border-[#D4AF37]/20 flex items-center justify-between">
+                        <div className="flex items-center gap-2 text-slate-300">
+                          <Sparkles className="w-4 h-4 text-amber-400" />
+                          <span className="font-bold">تاريخ البداية:</span>
+                        </div>
+                        <span className="font-extrabold text-amber-300 text-xs">{schedule.startDateText}</span>
                       </div>
-                      <span className="font-extrabold text-amber-300 text-xs">{schedule.startDateText}</span>
-                    </div>
+                    )}
 
                     {schedule.description && (
                       <p className="text-[11px] text-slate-300 leading-relaxed pt-1">
