@@ -23,7 +23,10 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateTab }) => {
                 <h3 className="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#FFF] via-[#F3E5AB] to-[#D4AF37]">
                   {TEACHER_INFO.name}
                 </h3>
-                <span className="text-xs text-[#D4AF37] font-bold">{TEACHER_INFO.title}</span>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <span className="text-xs text-[#D4AF37] font-bold">{TEACHER_INFO.title}</span>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#D4AF37]/15 text-[#F3E5AB] border border-[#D4AF37]/30">Mr. Mustafa Hub</span>
+                </div>
               </div>
             </div>
 

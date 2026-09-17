@@ -83,6 +83,9 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
               <h1 className="text-lg sm:text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#FFF] via-[#F3E5AB] to-[#D4AF37] tracking-tight">
                 {TEACHER_INFO.name}
               </h1>
+              <span className="text-[10px] sm:text-xs font-black px-2 py-0.5 rounded-full bg-[#D4AF37]/20 text-[#F3E5AB] border border-[#D4AF37]/40 tracking-wider">
+                Mr. Mustafa Hub
+              </span>
             </div>
             <div className="inline-block mt-0.5 px-2.5 py-0.5 rounded-md bg-gradient-to-r from-[#D4AF37]/20 to-[#0A1628] border border-[#D4AF37]/40 text-xs font-bold text-[#F3E5AB]">
               {TEACHER_INFO.title}
